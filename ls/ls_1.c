@@ -66,7 +66,10 @@ void print_names(char **names, int count)
 
 	for (i = 0; i < count; i++)
 	{
-		printf("%s ", names[i]);
+		if (names[i + 1] != NULL)
+			printf("%s ", names[i]);
+		else
+			printf("%s", names[i]);
 		free(names[i]);
 	}
 	printf("\n");
