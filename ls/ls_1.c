@@ -1,7 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <dirent.h>
+#include "hls.h"
 
 /**
 * compare - Comparison function for qsort
