@@ -43,3 +43,48 @@ int fill_names(DIR *d, char **names)
 	}
 	return (0);
 }
+
+
+/**
+* list_directory - List content of a single directory
+* @path: path of the directory to list
+* @prog: program name (argv[0]), used for error messages
+* Return: 0 on success, 1 or 2 on error
+*/
+
+int list_directory(const char *path, const char *prog)
+{
+	DIR *d;
+	char **names;
+	int count;
+
+	d = opendir(path);
+	if (d == NULL)
+	{
+		fprintf(stderr, "%s: cannot access %s: %s\n",
+			prog, path, strerror(errno));
+		return (1);
+	}
+	count = count_entries(d);
+	closedir(d);
+	names = malloc(sizeof(char *) * count);
+	if (names == NULL)
+		return (1);
+	d = opendir(path);
+	if (d == NULL)
+	{
+		free(names);
+		return (2);
+	}
+	if (fill_names(d, names) != 0)
+	{
+		closedir(d);
+		free_names(names, count);
+		return (1);
+	}
+	closedir(d);
+	sort_names(names, count);
+	print_names(names, count);
+	free_names(names, count);
+	return (0);
+}
