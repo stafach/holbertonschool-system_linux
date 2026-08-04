@@ -2,47 +2,28 @@
 
 /**
 * main - Entry point
+* @argc: argument count
+* @argv: argument vector
 * Return: 0 on success, 1 or 2 on error
 */
 
-int main(void)
+int main(int argc, char **argv)
 {
-	DIR *d;
-	char **names;
-	int count;
+	int i, ret, status;
 
-	d = opendir(".");
-	if (d == NULL)
-	{
-		perror("ls: cannot open directory '.'");
-		return (2);
-	}
-	count = count_entries(d); /* Count entries */
-	closedir(d); /* Close directory for reload readdir */
+	status = 0;
+	if (argc == 1)
+		return (list_directory(".", argv[0]));
 
-	names = malloc(sizeof(char *) * count); /* Allocate memory each entry*/
-	if (names == NULL)
-	{
-		fprintf(stderr, "ls: memory allocation failed\n");
-		return (1);
-	}
-	d = opendir("."); /* Reopen directory from the beginning */
-	if (d == NULL)
-	{
-		perror("ls: cannot open directory '.'");
-		free(names);
-		return (2);
-	}
-	if (fill_names(d, names) != 0) /* Check if fill_names succeeded */
-	{
-		closedir(d);
-		free_names(names, count);
-		return (1);
-	}
-	closedir(d);
-	sort_names(names, count);
-	print_names(names, count);
-	free_names(names, count);
+	if (argc == 2)
+		return (list_directory(argv[1], argv[0]));
 
-	return (0);
+	for (i = 1; i < argc; i++)
+	{
+		printf("%s:\n", argv[i]);
+		ret = list_directory(argv[i], argv[0]);
+		if (ret > status)
+			status = ret;
+	}
+	return (status);
 }
