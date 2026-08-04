@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
 
 int count_entries(DIR *d);
 int fill_names(DIR *d, char **names);
@@ -17,4 +18,5 @@ void sort_names(char **names, int count);
 void print_names(char **names, int count);
 void free_names(char **names, int count);
 
+int list_directory(const char *path, const char *prog);
 #endif
