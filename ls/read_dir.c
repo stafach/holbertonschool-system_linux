@@ -64,7 +64,7 @@ int list_directory(const char *path, const char *prog, int show_header)
 		d = opendir(path);
 		if (d == NULL)
 		{
-			fprintf(stderr, "%s: cannot access %s: %s\n",
+			fprintf(stderr, "%s: cannot access %s: %s",
 				prog, path, my_strerror(errno));
 			return (1);
 		}
