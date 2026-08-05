@@ -62,3 +62,26 @@ int my_strcasecmp(const char *s1, const char *s2)
 	}
 	return (s1[i] - s2[i]);
 }
+
+#include "hls.h"
+
+/**
+* my_strerror - Return a message matching an errno value
+* @err: errno value
+* Return: pointer to a static string describing the error
+*/
+
+const char *my_strerror(int err)
+{
+	if (err == ENOENT)
+		return ("No such file or directory");
+	if (err == EACCES)
+		return ("Permission denied");
+	if (err == ENOTDIR)
+		return ("Not a directory");
+	if (err == ELOOP)
+		return ("Too many levels of symbolic links");
+	if (err == ENAMETOOLONG)
+		return ("File name too long");
+	return ("Unknown error");
+}
