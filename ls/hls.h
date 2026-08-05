@@ -20,5 +20,5 @@ void sort_names(char **names, int count);
 void print_names(char **names, int count);
 void free_names(char **names, int count);
 
-int list_directory(const char *path, const char *prog);
+int list_directory(const char *path, const char *prog, int show_header);
 #endif
