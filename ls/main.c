@@ -9,21 +9,29 @@
 
 int main(int argc, char **argv)
 {
-	int i, ret, status;
+	int i, ret, status, count;
+	char **names;
 
 	status = 0;
 	if (argc == 1)
-		return (list_directory(".", argv[0]));
+		return (list_directory(".", argv[0], 0));
 
-	if (argc == 2)
-		return (list_directory(argv[1], argv[0]));
+	count = argc - 1;
+	names = malloc(sizeof(char *) * count);
+	if (names == NULL)
+		return (1);
 
-	for (i = 1; i < argc; i++)
+	for (i = 0; i < count; i++)
+		names[i] = argv[i + 1];
+	sort_names(names, count);
+	for (i = 0; i < count; i++)
 	{
-		printf("%s:\n", argv[i]);
-		ret = list_directory(argv[i], argv[0]);
+		if (i > 0)
+			printf("\n");
+		ret = list_directory(names[i], argv[0], count > 1);
 		if (ret > status)
 			status = ret;
 	}
+	free(names);
 	return (status);
 }
