@@ -9,6 +9,7 @@ void print_long(const char *path, const char *name)
 {
 	struct stat st;
 	char full_path[4096];
+	char *date;
 
 	sprintf(full_path, "%s/%s", path, name);
 
@@ -20,7 +21,11 @@ void print_long(const char *path, const char *name)
 	print_owner(&st);
 	print_group(&st);
 	printf(" %lld", (long long)st.st_size);
-	print_date(&st);
+
+	date = ctime(&st.st_mtime);
+	if (date != NULL)
+		printf(" %.6s %.4s", date + 4, date + 20);
+
 	printf(" %s", name);
 	print_link(path, name, st.st_mode);
 	printf("\n");
