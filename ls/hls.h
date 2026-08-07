@@ -21,6 +21,7 @@
  */
 typedef struct options
 {
+	int one;
 	int long_format;
 	int all;
 } options;
@@ -58,6 +59,7 @@ int check_stat(const char *path, const char *prog);
 
 int flag_l(options *opts);
 int flag_a(options *opts);
+int flag_one(options *opts);
 int handle_flag(char c, options *opts);
 int parse_options(int argc, char **argv, options *opts, int *first_path);
 
