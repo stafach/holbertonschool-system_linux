@@ -9,6 +9,7 @@ void init_options(options *opts)
 	opts->one = 0;
 	opts->long_format = 0;
 	opts->all = 0;
+	opts->almost_all = 0;
 }
 
 /**
