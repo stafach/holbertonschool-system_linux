@@ -97,7 +97,7 @@ int list_directory(const char *path, const char *prog,
 		}
 		if (show_header)
 			printf("%s:\n", path);
-		count = count_entries(d);
+		count = count_entries(d, opts);
 		closedir(d);
 		names = malloc(sizeof(char *) * count);
 		if (names == NULL)
@@ -108,7 +108,7 @@ int list_directory(const char *path, const char *prog,
 			free(names);
 			return (2);
 		}
-		if (fill_names(d, names, opts) != 0)
+		if (open_and_fill(path, names, opts) != 0)
 		{
 			closedir(d);
 			free_names(names, count);
