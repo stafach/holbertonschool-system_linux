@@ -11,6 +11,7 @@
 #include <pwd.h>
 #include <grp.h>
 #include <unistd.h>
+#include <time.h>
 
 
 /**
@@ -39,7 +40,7 @@ typedef struct flag
 
 int count_entries(DIR *d, options *opts);
 int fill_names(DIR *d, char **names, options *opts);
-int open_and_fill(const char *path, char **names, options *opts)
+int open_and_fill(const char *path, char **names, options *opts);
 
 int my_strlen(const char *s);
 char *my_strdup(const char *src);
@@ -52,7 +53,7 @@ void print_names(char **names, int count, const char *path, options *opts);
 void free_names(char **names, int count);
 
 int list_directory(const char *path, const char *prog,
-	int show_header, options *opts);
+int show_header, options *opts);
 int check_stat(const char *path, const char *prog);
 
 int flag_l(options *opts);
@@ -66,5 +67,8 @@ void print_owner(struct stat *st);
 void print_group(struct stat *st);
 void print_date(struct stat *st);
 void print_link(const char *path, const char *name, mode_t mode);
+
+void init_options(options *opts);
+
 
 #endif
