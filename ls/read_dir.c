@@ -13,7 +13,7 @@ int count_entries(DIR *d, options *opts)
 
 	while ((dir = readdir(d)) != NULL)
 	{
-		if (opts->all || dir->d_name[0] != '.')
+		if (should_include(dir->d_name, opts))
 			count++;
 	}
 
@@ -47,7 +47,7 @@ int fill_names(DIR *d, char **names, options *opts)
 
 	while ((dir = readdir(d)) != NULL)
 	{
-		if (opts->all || dir->d_name[0] != '.')
+		if (should_include(dir->d_name, opts))
 		{
 			names[i] = my_strdup(dir->d_name);
 			if (names[i] == NULL)
