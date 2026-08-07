@@ -49,7 +49,7 @@ void sort_names(char **names, int count);
 void print_names(char **names, int count, const char *path, options *opts);
 void free_names(char **names, int count);
 
-int list_directory(const char *path, const char *prog, int show_header);
+int list_directory(const char *path, const char *prog, int show_header, options *opts);
 int check_stat(const char *path, const char *prog);
 
 int flag_l(options *opts);
