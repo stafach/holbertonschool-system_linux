@@ -1,5 +1,28 @@
 #include "hls.h"
 
+
+/**
+ * should_include - Check if an entry must be displayed
+ * @name: entry name
+ * @opts: program options
+ * Return: 1 if entry must be displayed, 0 otherwise
+ */
+int should_include(const char *name, options *opts)
+{
+	if (opts->all)
+		return (1);
+
+	if (opts->almost_all)
+	{
+		if (name[0] == '.' && (name[1] == '\0' ||
+			(name[1] == '.' && name[2] == '\0')))
+			return (0);
+		return (1);
+	}
+
+	return (name[0] != '.');
+}
+
 /**
  * init_options - Initialize program options
  * @opts: program options
