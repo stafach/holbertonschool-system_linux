@@ -48,6 +48,29 @@ int fill_names(DIR *d, char **names, options *opts)
 
 
 /**
+ * open_and_fill - Open directory and fill names
+ * @path: directory path
+ * @names: array to fill
+ * @opts: program options
+ * Return: 0 on success, 1 on error
+ */
+int open_and_fill(const char *path, char **names, options *opts)
+{
+	DIR *d;
+	int ret;
+
+	d = opendir(path);
+	if (d == NULL)
+		return (1);
+
+	ret = fill_names(d, names, opts);
+	closedir(d);
+
+	return (ret);
+}
+
+
+/**
 * list_directory - List content of a single directory
 * @path: path of the directory to list
 * @prog: program name (argv[0]), used for error messages
