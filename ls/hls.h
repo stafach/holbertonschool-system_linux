@@ -47,6 +47,7 @@ int my_strcasecmp(const char *s1, const char *s2);
 const char *my_strerror(int err);
 
 void sort_names(char **names, int count);
+void print_normal(char **names, int count);
 void print_names(char **names, int count, const char *path, options *opts);
 void free_names(char **names, int count);
 
