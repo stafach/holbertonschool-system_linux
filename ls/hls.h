@@ -39,6 +39,7 @@ typedef struct flag
 
 int count_entries(DIR *d, options *opts);
 int fill_names(DIR *d, char **names, options *opts);
+int open_and_fill(const char *path, char **names, options *opts)
 
 int my_strlen(const char *s);
 char *my_strdup(const char *src);
