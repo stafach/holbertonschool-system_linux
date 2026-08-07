@@ -34,6 +34,17 @@ int flag_one(options *opts)
 }
 
 /**
+ * flag_almost_all - Activate almost all files
+ * @opts: program options
+ * Return: 0 on success
+ */
+int flag_almost_all(options *opts)
+{
+	opts->almost_all = 1;
+	return (0);
+}
+
+/**
  * handle_flag - Find and execute a flag handler
  * @c: flag character
  * @opts: program options
@@ -46,6 +57,7 @@ int handle_flag(char c, options *opts)
 		{"l", flag_l},
 		{"a", flag_a},
 		{"1", flag_one},
+		{"A", flag_almost_all},
 		{NULL, NULL}
 	};
 
