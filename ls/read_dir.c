@@ -3,17 +3,18 @@
 /**
 * count_entries - Count non-hidden entries in a directory
 * @d: opened directory stream
+* @opts: program options
 * Return: number of entries found
 */
 
-int count_entries(DIR *d)
+int count_entries(DIR *d, options *opts)
 {
 	struct dirent *dir;
 	int count = 0;
 
 	while ((dir = readdir(d)) != NULL)
 	{
-		if (dir->d_name[0] != '.')
+		if (opts->all || dir->d_name[0] != '.')
 			count++;
 	}
 	return (count);
@@ -23,17 +24,18 @@ int count_entries(DIR *d)
 * fill_names - Read directory entries into a names array
 * @d: opened directory stream
 * @names: pre-allocated array to fill
+* @opts: program options
 * Return: 0 if all good or 1 if error
 */
 
-int fill_names(DIR *d, char **names)
+int fill_names(DIR *d, char **names, options *opts)
 {
 	struct dirent *dir;
 	int i = 0;
 
 	while ((dir = readdir(d)) != NULL)
 	{
-		if (dir->d_name[0] != '.')
+		if (opts->all || dir->d_name[0] != '.')
 		{
 			names[i] = my_strdup(dir->d_name);
 			if (names[i] == NULL)
@@ -50,10 +52,12 @@ int fill_names(DIR *d, char **names)
 * @path: path of the directory to list
 * @prog: program name (argv[0]), used for error messages
 * @show_header: whether to show the header
+* @opts: program options
 * Return: 0 on success, 1 or 2 on error
 */
 
-int list_directory(const char *path, const char *prog, int show_header)
+int list_directory(const char *path, const char *prog,
+	int show_header, options *opts)
 {
 	DIR *d;
 	char **names;
@@ -81,7 +85,7 @@ int list_directory(const char *path, const char *prog, int show_header)
 			free(names);
 			return (2);
 		}
-		if (fill_names(d, names) != 0)
+		if (fill_names(d, names, opts) != 0)
 		{
 			closedir(d);
 			free_names(names, count);
@@ -89,7 +93,7 @@ int list_directory(const char *path, const char *prog, int show_header)
 		}
 		closedir(d);
 		sort_names(names, count);
-		print_names(names, count);
+		print_names(names, count, path, opts);
 		free_names(names, count);
 		return (0);
 	}
