@@ -46,6 +46,7 @@ int handle_flag(char c, options *opts)
 	static flag flags[] = {
 	{"l", flag_l},
 	{"a", flag_a},
+	{"1", flag_one},
 	{NULL, NULL}
 };
 
@@ -57,39 +58,3 @@ int handle_flag(char c, options *opts)
 
 	return (1);
 }
-
-/**
- * parse_options - Parse command line options
- * @argc: argument count
- * @argv: argument vector
- * @opts: program options
- * @first_path: index of first path argument
- * Return: 0 on success, 1 on invalid option
- */
-int parse_options(int argc, char **argv, options *opts, int *first_path)
-{
-	int i, j;
-
-	*first_path = 1;
-
-	for (i = 1; i < argc; i++)
-	{
-		if (argv[i][0] != '-' || argv[i][1] == '\0')
-			break;
-
-		for (j = 1; argv[i][j] != '\0'; j++)
-		{
-			if (handle_flag(argv[i][j], opts) != 0)
-			{
-				fprintf(stderr, "%s: invalid option -- '%c'\n",
-					argv[0], argv[i][j]);
-				return (1);
-			}
-		}
-
-		*first_path = i + 1;
-	}
-
-	return (0);
-}
-
