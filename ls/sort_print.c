@@ -29,15 +29,24 @@ void sort_names(char **names, int count)
 * print_names - Print each name on its own line
 * @names: array of strings to print
 * @count: number of elements in the array
+* @path: path of the directory
+* @opts: program options
 */
 
-void print_names(char **names, int count)
+void print_names(char **names, int count, const char *path, options *opts)
 {
 	int i;
 
+
 	for (i = 0; i < count - 1; i++)
-		printf("%s  ", names[i]);
-	printf("%s\n", names[count - 1]);
+	{
+		if (opts->long_format)
+			print_long_format(path, names[i]);
+		else
+			printf("%s  ", names[i]);
+	}
+	if (!opts->long_format)
+		printf("%s\n", names[count - 1]);
 }
 
 
