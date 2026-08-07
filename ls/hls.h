@@ -17,12 +17,14 @@
  * @one: activate -1
  * @long_format: activate -l
  * @all: activate -a
+ * @almost_all: activate -A
  */
 typedef struct options
 {
 	int one;
 	int long_format;
 	int all;
+	int almost_all;
 } options;
 
 /**
@@ -51,6 +53,7 @@ typedef struct path_error
 int flag_l(options *opts);
 int flag_a(options *opts);
 int flag_one(options *opts);
+int flag_almost_all(options *opts);
 int handle_flag(char c, options *opts);
 
 /* parse.c */
