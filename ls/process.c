@@ -18,7 +18,6 @@ int collect_errors(char **paths, int count,
 	for (i = 0; i < count; i++)
 	{
 		statuses[i] = check_stat(paths[i], &error);
-
 		if (statuses[i] == 2)
 		{
 			errors[error_count].path = paths[i];
@@ -55,7 +54,7 @@ void print_errors(path_error *errors, int count, const char *prog)
  * @count: number of paths
  * @prog: program name
  * @opts: program options
- * Return: status
+ * Return: program status
  */
 int process_valid_paths(char **paths, int *statuses,
 		int count, const char *prog, options *opts)
@@ -63,18 +62,21 @@ int process_valid_paths(char **paths, int *statuses,
 	int i;
 	int ret;
 	int status = 0;
+	int printed = 0;
 
 	for (i = 0; i < count; i++)
 	{
 		if (statuses[i] == 2)
 			continue;
 
-		if (i > 0)
+		if (printed)
 			printf("\n");
 
 		ret = list_directory(paths[i], prog, count > 1, opts);
 		if (ret > status)
 			status = ret;
+
+		printed = 1;
 	}
 
 	return (status);

@@ -1,14 +1,14 @@
 #include "hls.h"
 
 /**
-* sort_names - Sort an array of strings alphabetically (bubble sort)
-* @names: array of strings to sort
-* @count: number of elements in the array
-*/
-
+ * sort_names - Sort names alphabetically
+ * @names: array of names
+ * @count: number of elements
+ */
 void sort_names(char **names, int count)
 {
-	int i, j;
+	int i;
+	int j;
 	char *tmp;
 
 	for (i = 0; i < count - 1; i++)
@@ -26,31 +26,32 @@ void sort_names(char **names, int count)
 }
 
 /**
- * print_normal - Print names in normal format
+ * print_normal - Print names according to -1
  * @names: array of names
  * @count: number of elements
+ * @opts: program options
  */
-void print_normal(char **names, int count)
+void print_normal(char **names, int count, options *opts)
 {
 	int i;
 
 	for (i = 0; i < count; i++)
 	{
 		printf("%s", names[i]);
-		if (i < count - 1)
+		if (opts->one || i == count - 1)
+			printf("\n");
+		else
 			printf("  ");
 	}
-	printf("\n");
 }
 
 /**
-* print_names - Print each name on its own line
-* @names: array of strings to print
-* @count: number of elements in the array
-* @path: path of the directory
-* @opts: program options
-*/
-
+ * print_names - Print names according to options
+ * @names: array of names
+ * @count: number of elements
+ * @path: directory path
+ * @opts: program options
+ */
 void print_names(char **names, int count,
 		const char *path, options *opts)
 {
@@ -58,7 +59,7 @@ void print_names(char **names, int count,
 
 	if (!opts->long_format)
 	{
-		print_normal(names, count);
+		print_normal(names, count, opts);
 		return;
 	}
 
@@ -66,18 +67,17 @@ void print_names(char **names, int count,
 		print_long(path, names[i]);
 }
 
-
 /**
-* free_names - Free an array of strings and the array itself
-* @names: array of strings to free
-* @count: number of elements in the array
-*/
-
+ * free_names - Free names array
+ * @names: array of names
+ * @count: number of elements
+ */
 void free_names(char **names, int count)
 {
 	int i;
 
 	for (i = 0; i < count; i++)
 		free(names[i]);
+
 	free(names);
 }

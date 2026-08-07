@@ -6,36 +6,45 @@
  */
 void init_options(options *opts)
 {
+	opts->one = 0;
 	opts->long_format = 0;
 	opts->all = 0;
 }
 
 /**
- * process_paths - Process all paths given by the user
- * @argc: argument count
- * @argv: argument vector
- * @first_path: index of first path
+ * process_paths - Check errors before displaying valid paths
+ * @paths: paths to process
+ * @count: number of paths
+ * @prog: program name
  * @opts: program options
  * Return: program status
  */
-int process_paths(int argc, char **argv,
-		int first_path, options *opts)
+int process_paths(char **paths, int count,
+		const char *prog, options *opts)
 {
-	int i;
-	int ret;
-	int status = 0;
+	int *statuses;
+	path_error *errors;
+	int error_count;
+	int status;
 
-	for (i = first_path; i < argc; i++)
+	statuses = malloc(sizeof(int) * count);
+	errors = malloc(sizeof(path_error) * count);
+	if (statuses == NULL || errors == NULL)
 	{
-		if (i > first_path)
-			printf("\n");
-
-		ret = list_directory(argv[i], argv[0],
-				argc - first_path > 1, opts);
-
-		if (ret > status)
-			status = ret;
+		free(statuses);
+		free(errors);
+		return (1);
 	}
+
+	error_count = collect_errors(paths, count, statuses, errors);
+	print_errors(errors, error_count, prog);
+	status = process_valid_paths(paths, statuses, count, prog, opts);
+
+	free(statuses);
+	free(errors);
+
+	if (error_count > 0)
+		return (1);
 
 	return (status);
 }
@@ -49,15 +58,17 @@ int process_paths(int argc, char **argv,
 int main(int argc, char **argv)
 {
 	options opts;
-	int first_path;
+	char **paths;
+	int count;
+	int status;
 
 	init_options(&opts);
-
-	if (parse_options(argc, argv, &opts, &first_path) != 0)
+	count = parse_args(argc, argv, &opts, &paths);
+	if (count < 0)
 		return (1);
 
-	if (first_path >= argc)
-		return (list_directory(".", argv[0], 0, &opts));
+	status = process_paths(paths, count, argv[0], &opts);
+	free(paths);
 
-	return (process_paths(argc, argv, first_path, &opts));
+	return (status);
 }

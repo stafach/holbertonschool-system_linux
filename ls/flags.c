@@ -42,13 +42,12 @@ int flag_one(options *opts)
 int handle_flag(char c, options *opts)
 {
 	int i;
-
 	static flag flags[] = {
-	{"l", flag_l},
-	{"a", flag_a},
-	{"1", flag_one},
-	{NULL, NULL}
-};
+		{"l", flag_l},
+		{"a", flag_a},
+		{"1", flag_one},
+		{NULL, NULL}
+	};
 
 	for (i = 0; flags[i].str != NULL; i++)
 	{
