@@ -37,7 +37,7 @@ typedef struct flag
 } flag;
 
 
-int count_entries(DIR *d);
+int count_entries(DIR *d, options *opts);
 int fill_names(DIR *d, char **names);
 
 int my_strlen(const char *s);
