@@ -98,6 +98,7 @@ int process_valid_paths(char **paths, int *statuses,
 		int count, const char *prog, options *opts);
 
 /* main.c */
+int should_include(const char *name, options *opts);
 void init_options(options *opts);
 int process_paths(char **paths, int count,
 		const char *prog, options *opts);
