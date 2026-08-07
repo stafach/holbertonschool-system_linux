@@ -49,7 +49,8 @@ void sort_names(char **names, int count);
 void print_names(char **names, int count, const char *path, options *opts);
 void free_names(char **names, int count);
 
-int list_directory(const char *path, const char *prog, int show_header, options *opts);
+int list_directory(const char *path, const char *prog,
+	int show_header, options *opts);
 int check_stat(const char *path, const char *prog);
 
 int flag_l(options *opts);
@@ -59,5 +60,9 @@ int parse_options(int argc, char **argv, options *opts, int *first_path);
 
 void print_permissions(mode_t mode);
 void print_long(const char *path, const char *name);
+void print_owner(struct stat *st);
+void print_group(struct stat *st);
+void print_date(struct stat *st);
+void print_link(const char *path, const char *name, mode_t mode);
 
 #endif
