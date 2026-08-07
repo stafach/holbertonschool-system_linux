@@ -33,3 +33,75 @@ void print_permissions(mode_t mode)
 
 	printf("%s", permissions);
 }
+
+/**
+ * print_owner - Print file owner
+ * @st: file information
+ */
+void print_owner(struct stat *st)
+{
+	struct passwd *pw;
+
+	pw = getpwuid(st->st_uid);
+
+	if (pw != NULL)
+		printf(" %s", pw->pw_name);
+	else
+		printf(" %u", st->st_uid);
+}
+
+
+/**
+ * print_group - Print file group
+ * @st: file information
+ */
+void print_group(struct stat *st)
+{
+	struct group *gr;
+
+	gr = getgrgid(st->st_gid);
+
+	if (gr != NULL)
+		printf(" %s", gr->gr_name);
+	else
+		printf(" %u", st->st_gid);
+}
+
+/**
+ * print_date - Print modification date
+ * @st: file information
+ */
+void print_date(struct stat *st)
+{
+	char *date;
+
+	date = ctime(&st->st_mtime);
+
+	if (date != NULL)
+		printf(" %.12s", date + 4);
+}
+
+/**
+ * print_link - Print symbolic link target
+ * @path: directory path
+ * @name: link name
+ * @mode: file mode
+ */
+void print_link(const char *path, const char *name, mode_t mode)
+{
+	char full_path[4096];
+	char target[4096];
+	ssize_t len;
+
+	if (!S_ISLNK(mode))
+		return;
+
+	sprintf(full_path, "%s/%s", path, name);
+	len = readlink(full_path, target, sizeof(target) - 1);
+
+	if (len != -1)
+	{
+		target[len] = '\0';
+		printf(" -> %s", target);
+	}
+}
