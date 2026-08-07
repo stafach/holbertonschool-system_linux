@@ -26,6 +26,24 @@ void sort_names(char **names, int count)
 }
 
 /**
+ * print_normal - Print names in normal format
+ * @names: array of names
+ * @count: number of elements
+ */
+void print_normal(char **names, int count)
+{
+	int i;
+
+	for (i = 0; i < count; i++)
+	{
+		printf("%s", names[i]);
+		if (i < count - 1)
+			printf("  ");
+	}
+	printf("\n");
+}
+
+/**
 * print_names - Print each name on its own line
 * @names: array of strings to print
 * @count: number of elements in the array
@@ -33,20 +51,19 @@ void sort_names(char **names, int count)
 * @opts: program options
 */
 
-void print_names(char **names, int count, const char *path, options *opts)
+void print_names(char **names, int count,
+		const char *path, options *opts)
 {
 	int i;
 
-
-	for (i = 0; i < count - 1; i++)
-	{
-		if (opts->long_format)
-			print_long_format(path, names[i]);
-		else
-			printf("%s  ", names[i]);
-	}
 	if (!opts->long_format)
-		printf("%s\n", names[count - 1]);
+	{
+		print_normal(names, count);
+		return;
+	}
+
+	for (i = 0; i < count; i++)
+		print_long(path, names[i]);
 }
 
 
