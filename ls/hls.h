@@ -16,10 +16,12 @@
 /**
  * struct options - Options activated by command line flags
  * @long_format: activate -l
+ * @all: activate -a
  */
 typedef struct options
 {
 	int long_format;
+	int all;
 } options;
 
 
