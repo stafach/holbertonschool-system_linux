@@ -22,6 +22,16 @@ int flag_a(options *opts)
 	return (0);
 }
 
+/**
+ * flag_one - Activate one file per line
+ * @opts: program options
+ * Return: 0 on success
+ */
+int flag_one(options *opts)
+{
+	opts->one = 1;
+	return (0);
+}
 
 /**
  * handle_flag - Find and execute a flag handler
