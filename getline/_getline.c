@@ -40,9 +40,6 @@ ssize_t fill_buffer(int fd, char *buffer)
 	ssize_t size;
 
 	size = read(fd, buffer, READ_SIZE);
-	if (size > 0)
-		buffer[size] = '\0';
-
 	return (size);
 }
 
@@ -64,19 +61,38 @@ char *empty_line(void)
 }
 
 /**
-* initialize_buffer - initializes the buffer
-* @buffer: the buffer
-* @pos: the position in the buffer
-* @size: the size of the buffer
-* Return: Null if malloc error
-*/
-void initialize_buffer(char **buffer, size_t *pos, ssize_t *size)
+ * initialize_buffer - initializes a buffer state
+ * @state: buffer state
+ *
+ * Return: nothing
+ */
+void initialize_buffer(struct buffer_state *state)
 {
-	*buffer = malloc(READ_SIZE + 1);
-	if (*buffer == NULL)
+	state->buffer = malloc(READ_SIZE + 1);
+	if (state->buffer == NULL)
 		return;
-	*pos = 0;
-	*size = 0;
+
+	state->pos = 0;
+	state->size = 0;
+}
+
+/**
+ * free_states - frees all buffer states
+ * @states: array of buffer states
+ *
+ * Return: nothing
+ */
+void free_states(struct buffer_state *states)
+{
+	int i;
+
+	for (i = 0; i < 1024; i++)
+	{
+		free(states[i].buffer);
+		states[i].buffer = NULL;
+		states[i].pos = 0;
+		states[i].size = 0;
+	}
 }
 
 /**
@@ -87,45 +103,59 @@ void initialize_buffer(char **buffer, size_t *pos, ssize_t *size)
  */
 char *_getline(const int fd)
 {
-	static char *buffer;
-	static size_t pos;
-	static ssize_t size;
+	static struct buffer_state states[1024];
+	struct buffer_state *state;
 	char *line;
 	size_t len;
 
-	if (buffer == NULL)
+	if (fd == -1)
 	{
-		initialize_buffer(&buffer, &pos, &size);
+		free_states(states);
+		return (NULL);
 	}
+
+	if (fd < 0 || fd >= 1024)
+		return (NULL);
+
+	state = &states[fd];
+
+	if (state->buffer == NULL)
+		initialize_buffer(state);
+
+	if (state->buffer == NULL)
+		return (NULL);
 
 	line = NULL;
 	len = 0;
 
 	while (1)
 	{
-		if (pos >= (size_t)size)
+		if (state->pos >= (size_t)state->size)
 		{
-			size = fill_buffer(fd, buffer);
-			pos = 0;
-			if (size <= 0)
+			state->size = fill_buffer(fd, state->buffer);
+			state->pos = 0;
+
+			if (state->size <= 0)
 			{
-				free(buffer);
-				buffer = NULL;
+				free(state->buffer);
+				state->buffer = NULL;
 				return (line);
 			}
 		}
 
-		while (pos < (size_t)size && buffer[pos] != '\n')
+		while (state->pos < (size_t)state->size &&
+		       state->buffer[state->pos] != '\n')
 		{
-			line = append_char(line, &len, buffer[pos]);
+			line = append_char(line, &len, state->buffer[state->pos]);
 			if (line == NULL)
 				return (NULL);
-			pos++;
+			state->pos++;
 		}
 
-		if (pos < (size_t)size && buffer[pos] == '\n')
+		if (state->pos < (size_t)state->size &&
+		    state->buffer[state->pos] == '\n')
 		{
-			pos++;
+			state->pos++;
 			if (line == NULL)
 				return (empty_line());
 			return (line);
