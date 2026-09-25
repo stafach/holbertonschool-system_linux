@@ -1,4 +1,3 @@
-```c
 #include <stdio.h>
 #include "elf_header.h"
 
