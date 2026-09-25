@@ -10,7 +10,7 @@ static void print_magic(unsigned char *ident)
 {
 	int i;
 
-	printf("Magic: ");
+	printf("  Magic:   ");
 	for (i = 0; i < EI_NIDENT; i++)
 		printf("%02x%s", ident[i], i == EI_NIDENT - 1 ? "\n" : " ");
 }
@@ -21,14 +21,12 @@ static void print_magic(unsigned char *ident)
  */
 static void print_class(unsigned char class)
 {
-	printf("Class: ");
-
 	if (class == ELFCLASS32)
-		printf("ELF32\n");
+		printf("  Class:                             ELF32\n");
 	else if (class == ELFCLASS64)
-		printf("ELF64\n");
+		printf("  Class:                             ELF64\n");
 	else
-		printf("none\n");
+		printf("  Class:                             none\n");
 }
 
 /**
@@ -37,14 +35,12 @@ static void print_class(unsigned char class)
  */
 static void print_data(unsigned char data)
 {
-	printf("Data: ");
-
 	if (data == ELFDATA2LSB)
-		printf("2's complement, little endian\n");
+		printf("  Data:                              2's complement, little endian\n");
 	else if (data == ELFDATA2MSB)
-		printf("2's complement, big endian\n");
+		printf("  Data:                              2's complement, big endian\n");
 	else
-		printf("none\n");
+		printf("  Data:                              none\n");
 }
 
 /**
@@ -53,8 +49,8 @@ static void print_data(unsigned char data)
  */
 static void print_version(unsigned char version)
 {
-	printf("Version: %u (%s)\n", version,
-	       version == EV_CURRENT ? "current" : "unknown");
+	printf("  Version:                           %u (%s)\n",
+	       version, version == EV_CURRENT ? "current" : "unknown");
 }
 
 /**
@@ -63,7 +59,7 @@ static void print_version(unsigned char version)
  */
 static void print_osabi(unsigned char osabi)
 {
-	printf("OS/ABI: ");
+	printf("  OS/ABI:                            ");
 
 	switch (osabi)
 	{
@@ -90,7 +86,7 @@ static void print_osabi(unsigned char osabi)
  */
 static void print_type(unsigned short type)
 {
-	printf("Type: ");
+	printf("  Type:                              ");
 
 	switch (type)
 	{
@@ -120,7 +116,7 @@ static void print_type(unsigned short type)
  */
 static void print_machine(unsigned short machine)
 {
-	printf("Machine: ");
+	printf("  Machine:                           ");
 
 	switch (machine)
 	{
@@ -156,10 +152,11 @@ static void print_common(unsigned char *ident, unsigned short type,
 	print_data(ident[EI_DATA]);
 	print_version(ident[EI_VERSION]);
 	print_osabi(ident[EI_OSABI]);
-	printf("ABI Version: %u\n", ident[EI_ABIVERSION]);
+	printf("  ABI Version:                       %u\n",
+	       ident[EI_ABIVERSION]);
 	print_type(type);
 	print_machine(machine);
-	printf("Version:                           0x%x\n", version);
+	printf("  Version:                           0x%x\n", version);
 }
 
 /**
@@ -171,23 +168,24 @@ void print_header32(Elf32_Ehdr *header)
 	printf("ELF Header:\n");
 	print_common(header->e_ident, header->e_type,
 		     header->e_machine, header->e_version);
-	printf("Entry point address:               0x%x\n", header->e_entry);
-	printf("Start of program headers:          %u (bytes into file)\n",
+	printf("  Entry point address:               0x%x\n",
+	       header->e_entry);
+	printf("  Start of program headers:          %u (bytes into file)\n",
 	       header->e_phoff);
-	printf("Start of section headers:          %u (bytes into file)\n",
+	printf("  Start of section headers:          %u (bytes into file)\n",
 	       header->e_shoff);
-	printf("Flags:                             0x%x\n", header->e_flags);
-	printf("Size of this header:               %u (bytes)\n",
+	printf("  Flags:                             0x%x\n", header->e_flags);
+	printf("  Size of this header:               %u (bytes)\n",
 	       header->e_ehsize);
-	printf("Size of program headers:           %u (bytes)\n",
+	printf("  Size of program headers:           %u (bytes)\n",
 	       header->e_phentsize);
-	printf("Number of program headers:         %u\n",
+	printf("  Number of program headers:         %u\n",
 	       header->e_phnum);
-	printf("Size of section headers:           %u (bytes)\n",
+	printf("  Size of section headers:           %u (bytes)\n",
 	       header->e_shentsize);
-	printf("Number of section headers:         %u\n",
+	printf("  Number of section headers:         %u\n",
 	       header->e_shnum);
-	printf("Section header string table index: %u\n",
+	printf("  Section header string table index: %u\n",
 	       header->e_shstrndx);
 }
 
@@ -200,23 +198,23 @@ void print_header64(Elf64_Ehdr *header)
 	printf("ELF Header:\n");
 	print_common(header->e_ident, header->e_type,
 		     header->e_machine, header->e_version);
-	printf("Entry point address:               0x%lx\n",
+	printf("  Entry point address:               0x%lx\n",
 	       header->e_entry);
-	printf("Start of program headers:          %lu (bytes into file)\n",
+	printf("  Start of program headers:          %lu (bytes into file)\n",
 	       header->e_phoff);
-	printf("Start of section headers:          %lu (bytes into file)\n",
+	printf("  Start of section headers:          %lu (bytes into file)\n",
 	       header->e_shoff);
-	printf("Flags:                             0x%x\n", header->e_flags);
-	printf("Size of this header:               %u (bytes)\n",
+	printf("  Flags:                             0x%x\n", header->e_flags);
+	printf("  Size of this header:               %u (bytes)\n",
 	       header->e_ehsize);
-	printf("Size of program headers:           %u (bytes)\n",
+	printf("  Size of program headers:           %u (bytes)\n",
 	       header->e_phentsize);
-	printf("Number of program headers:         %u\n",
+	printf("  Number of program headers:         %u\n",
 	       header->e_phnum);
-	printf("Size of section headers:           %u (bytes)\n",
+	printf("  Size of section headers:           %u (bytes)\n",
 	       header->e_shentsize);
-	printf("Number of section headers:         %u\n",
+	printf("  Number of section headers:         %u\n",
 	       header->e_shnum);
-	printf("Section header string table index: %u\n",
+	printf("  Section header string table index: %u\n",
 	       header->e_shstrndx);
 }
