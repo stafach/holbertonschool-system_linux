@@ -12,7 +12,8 @@ static void print_magic(unsigned char *ident)
 
 	printf("  Magic:   ");
 	for (i = 0; i < EI_NIDENT; i++)
-		printf("%02x%s", ident[i], i == EI_NIDENT - 1 ? "\n" : " ");
+		printf("%02x ", ident[i]);
+	printf("\n");
 }
 
 /**
