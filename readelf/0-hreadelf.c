@@ -15,7 +15,7 @@
 int main(int argc, char **argv)
 {
 	int fd;
-	Elf64_Ehdr header;
+	unsigned char ident[EI_NIDENT];
 	ssize_t bytes;
 
 	if (argc != 2)
@@ -31,33 +31,57 @@ int main(int argc, char **argv)
 		return (1);
 	}
 
-	bytes = read(fd, &header, sizeof(header));
-	if (bytes != sizeof(header))
+	bytes = read(fd, ident, EI_NIDENT);
+	if (bytes != EI_NIDENT)
 	{
 		fprintf(stderr, "Error reading file\n");
 		close(fd);
 		return (1);
 	}
 
-	if (header.e_ident[EI_MAG0] != ELFMAG0 ||
-	    header.e_ident[EI_MAG1] != ELFMAG1 ||
-	    header.e_ident[EI_MAG2] != ELFMAG2 ||
-	    header.e_ident[EI_MAG3] != ELFMAG3)
+	if (ident[EI_MAG0] != ELFMAG0 ||
+	    ident[EI_MAG1] != ELFMAG1 ||
+	    ident[EI_MAG2] != ELFMAG2 ||
+	    ident[EI_MAG3] != ELFMAG3)
 	{
 		fprintf(stderr, "Error: Not an ELF file\n");
 		close(fd);
 		return (1);
 	}
 
-	if (header.e_ident[EI_CLASS] != ELFCLASS64)
+	if (ident[EI_CLASS] == ELFCLASS32)
 	{
-		fprintf(stderr, "Error: Only ELF64 files are supported\n");
+		Elf32_Ehdr header;
+
+		lseek(fd, 0, SEEK_SET);
+		if (read(fd, &header, sizeof(header)) != sizeof(header))
+		{
+			fprintf(stderr, "Error reading file\n");
+			close(fd);
+			return (1);
+		}
+		print_header32(&header);
+	}
+	else if (ident[EI_CLASS] == ELFCLASS64)
+	{
+		Elf64_Ehdr header;
+
+		lseek(fd, 0, SEEK_SET);
+		if (read(fd, &header, sizeof(header)) != sizeof(header))
+		{
+			fprintf(stderr, "Error reading file\n");
+			close(fd);
+			return (1);
+		}
+		print_header64(&header);
+	}
+	else
+	{
+		fprintf(stderr, "Error: Invalid ELF class\n");
 		close(fd);
 		return (1);
 	}
 
-	print_header(&header);
 	close(fd);
-
 	return (0);
 }

@@ -1,15 +1,16 @@
 #include <stdio.h>
+#include <elf.h>
 #include "elf_header.h"
 
 /**
- * print_magic - prints the ELF magic number
- * @ident: ELF identification bytes
+ * print_magic - prints the ELF magic
+ * @ident: ELF identification
  */
-void print_magic(unsigned char *ident)
+static void print_magic(unsigned char *ident)
 {
 	int i;
 
-	printf("  Magic:   ");
+	printf("Magic: ");
 	for (i = 0; i < EI_NIDENT; i++)
 		printf("%02x%s", ident[i], i == EI_NIDENT - 1 ? "\n" : " ");
 }
@@ -18,9 +19,9 @@ void print_magic(unsigned char *ident)
  * print_class - prints the ELF class
  * @class: ELF class
  */
-void print_class(unsigned char class)
+static void print_class(unsigned char class)
 {
-	printf("  Class:                             ");
+	printf("Class: ");
 
 	if (class == ELFCLASS32)
 		printf("ELF32\n");
@@ -34,9 +35,9 @@ void print_class(unsigned char class)
  * print_data - prints the ELF data encoding
  * @data: ELF data encoding
  */
-void print_data(unsigned char data)
+static void print_data(unsigned char data)
 {
-	printf("  Data:                              ");
+	printf("Data: ");
 
 	if (data == ELFDATA2LSB)
 		printf("2's complement, little endian\n");
@@ -50,24 +51,27 @@ void print_data(unsigned char data)
  * print_version - prints the ELF version
  * @version: ELF version
  */
-void print_version(unsigned char version)
+static void print_version(unsigned char version)
 {
-	printf("  Version:                           %d (%s)\n",
-	       version, version == EV_CURRENT ? "current" : "unknown");
+	printf("Version: %u (%s)\n", version,
+	       version == EV_CURRENT ? "current" : "unknown");
 }
 
 /**
- * print_osabi - prints the ELF OS/ABI
- * @osabi: ELF OS/ABI
+ * print_osabi - prints the ELF OS ABI
+ * @osabi: ELF OS ABI
  */
-void print_osabi(unsigned char osabi)
+static void print_osabi(unsigned char osabi)
 {
-	printf("  OS/ABI:                            ");
+	printf("OS/ABI: ");
 
 	switch (osabi)
 	{
 	case ELFOSABI_SYSV:
 		printf("UNIX - System V\n");
+		break;
+	case ELFOSABI_SOLARIS:
+		printf("UNIX - Solaris\n");
 		break;
 	case ELFOSABI_LINUX:
 		printf("UNIX - Linux\n");
@@ -84,9 +88,9 @@ void print_osabi(unsigned char osabi)
  * print_type - prints the ELF type
  * @type: ELF type
  */
-void print_type(unsigned short type)
+static void print_type(unsigned short type)
 {
-	printf("  Type:                              ");
+	printf("Type: ");
 
 	switch (type)
 	{
@@ -100,7 +104,7 @@ void print_type(unsigned short type)
 		printf("EXEC (Executable file)\n");
 		break;
 	case ET_DYN:
-		printf("DYN (Position-Independent Executable file)\n");
+		printf("DYN (Shared object file)\n");
 		break;
 	case ET_CORE:
 		printf("CORE (Core file)\n");
@@ -114,23 +118,23 @@ void print_type(unsigned short type)
  * print_machine - prints the ELF machine
  * @machine: ELF machine
  */
-void print_machine(unsigned short machine)
+static void print_machine(unsigned short machine)
 {
-	printf("  Machine:                           ");
+	printf("Machine: ");
 
 	switch (machine)
 	{
-	case EM_X86_64:
-		printf("Advanced Micro Devices X86-64\n");
-		break;
 	case EM_386:
 		printf("Intel 80386\n");
 		break;
-	case EM_AARCH64:
-		printf("AArch64\n");
+	case EM_X86_64:
+		printf("Advanced Micro Devices X86-64\n");
 		break;
 	case EM_ARM:
 		printf("ARM\n");
+		break;
+	case EM_AARCH64:
+		printf("AArch64\n");
 		break;
 	default:
 		printf("Unknown\n");
@@ -138,39 +142,89 @@ void print_machine(unsigned short machine)
 }
 
 /**
- * print_header - prints the ELF header
- * @header: ELF header
+ * print_common - prints common ELF header fields
+ * @header: ELF64 header
  */
-void print_header(Elf64_Ehdr *header)
+static void print_common(Elf64_Ehdr *header)
 {
-	printf("ELF Header:\n");
+	printf("Magic: ");
 	print_magic(header->e_ident);
+
+	printf("Class: ");
 	print_class(header->e_ident[EI_CLASS]);
+
+	printf("Data: ");
 	print_data(header->e_ident[EI_DATA]);
+
+	printf("Version: ");
 	print_version(header->e_ident[EI_VERSION]);
+
+	printf("OS/ABI: ");
 	print_osabi(header->e_ident[EI_OSABI]);
-	printf("  ABI Version:                       %d\n",
-	       header->e_ident[EI_ABIVERSION]);
+
+	printf("ABI Version: %u\n", header->e_ident[EI_ABIVERSION]);
+
 	print_type(header->e_type);
 	print_machine(header->e_machine);
-	printf("  Version:                           0x%x\n", header->e_version);
-	printf("  Entry point address:               0x%lx\n",
-	       header->e_entry);
-	printf("  Start of program headers:          %lu (bytes into file)\n",
+
+	printf("Version:                           0x%x\n", header->e_version);
+}
+
+/**
+ * print_header32 - prints an ELF32 header
+ * @header: ELF32 header
+ */
+void print_header32(Elf32_Ehdr *header)
+{
+	printf("ELF Header:\n");
+	print_common((Elf64_Ehdr *)header);
+
+	printf("Entry point address:               0x%x\n", header->e_entry);
+	printf("Start of program headers:          %u (bytes into file)\n",
 	       header->e_phoff);
-	printf("  Start of section headers:          %lu (bytes into file)\n",
+	printf("Start of section headers:          %u (bytes into file)\n",
 	       header->e_shoff);
-	printf("  Flags:                             0x%x\n", header->e_flags);
-	printf("  Size of this header:               %u (bytes)\n",
+	printf("Flags:                             0x%x\n", header->e_flags);
+	printf("Size of this header:               %u (bytes)\n",
 	       header->e_ehsize);
-	printf("  Size of program headers:           %u (bytes)\n",
+	printf("Size of program headers:           %u (bytes)\n",
 	       header->e_phentsize);
-	printf("  Number of program headers:         %u\n",
+	printf("Number of program headers:         %u\n",
 	       header->e_phnum);
-	printf("  Size of section headers:           %u (bytes)\n",
+	printf("Size of section headers:           %u (bytes)\n",
 	       header->e_shentsize);
-	printf("  Number of section headers:         %u\n",
+	printf("Number of section headers:         %u\n",
 	       header->e_shnum);
-	printf("  Section header string table index: %u\n",
+	printf("Section header string table index: %u\n",
+	       header->e_shstrndx);
+}
+
+/**
+ * print_header64 - prints an ELF64 header
+ * @header: ELF64 header
+ */
+void print_header64(Elf64_Ehdr *header)
+{
+	printf("ELF Header:\n");
+	print_common(header);
+
+	printf("Entry point address:               0x%lx\n",
+	       header->e_entry);
+	printf("Start of program headers:          %lu (bytes into file)\n",
+	       header->e_phoff);
+	printf("Start of section headers:          %lu (bytes into file)\n",
+	       header->e_shoff);
+	printf("Flags:                             0x%x\n", header->e_flags);
+	printf("Size of this header:               %u (bytes)\n",
+	       header->e_ehsize);
+	printf("Size of program headers:           %u (bytes)\n",
+	       header->e_phentsize);
+	printf("Number of program headers:         %u\n",
+	       header->e_phnum);
+	printf("Size of section headers:           %u (bytes)\n",
+	       header->e_shentsize);
+	printf("Number of section headers:         %u\n",
+	       header->e_shnum);
+	printf("Section header string table index: %u\n",
 	       header->e_shstrndx);
 }
