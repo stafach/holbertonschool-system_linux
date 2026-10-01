@@ -1,6 +1,6 @@
 BITS 64
 
-global asm_strcmp
+global asm_strncmp
 
 section .text
 
