@@ -4,37 +4,29 @@ global asm_strncmp
 
 section .text
 
-; int asm_strncmp(const char *s1, const char *s2);
+; int asm_strncmp(const char *s1, const char *s2, size_t n);
 ;
 ; Entrée : RDI = s1, RSI = s2, RDX = n
-; Sortie : EAX = s1[i] - s2[i] au premier caractère différent (0 si égales)
+; Sortie : EAX = s1[i] - s2[i] au premier caractère différent,
+;          0 si les n premiers caractères sont égaux
 
 asm_strncmp:
-	xor	rcx, rcx		; compteur i = 0 (RCX, pas RAX)
+	xor	rcx, rcx		; i = 0
 
 .loop:
-	cmp rcx, rdx		; i == n ?
-	jae .equal			; si i >= n, return 0
+	cmp	rcx, rdx		; i >= n ?
+	jae	.equal			; oui : n caractères comparés → 0
 	movzx	eax, byte [rdi + rcx]	; eax = s1[i]
-	movzx	r8d, byte [rsi + rcx]	; edx = s2[i]
-	test	eax, eax		; s1[i] == '\0' ? (donc s2[i] aussi)
-	je	.end			; oui : les deux chaînes sont finies
-	test	r8d, r8d		; s1[i] == '\0' ? (donc s2[i] aussi)
-	je	.end			; oui : les deux chaînes sont finies
+	movzx	r8d, byte [rsi + rcx]	; r8d = s2[i]
 	cmp	eax, r8d		; s1[i] == s2[i] ?
-	jne	.end			; non : on a trouvé une différence
+	jne	.end			; non : différence trouvée
+	test	eax, eax		; s1[i] == '\0' ?
+	je	.end			; oui : les deux chaînes sont finies
 	inc	rcx			; i++
 	jmp	.loop
 
 .end:
-	cmp	eax, r8d		; compare s1[i] et s2[i]
-	je	.equal			; égaux → 0
-	jl	.less			; s1[i] < s2[i] → -1
-	mov	eax, 1			; sinon s1[i] > s2[i] → 1
-	ret
-
-.less:
-	mov	eax, -1
+	sub	eax, r8d		; eax = s1[i] - s2[i]
 	ret
 
 .equal:
