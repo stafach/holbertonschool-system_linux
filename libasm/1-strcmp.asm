@@ -23,5 +23,16 @@ asm_strcmp:
 	jmp	.loop
 
 .end:
-	sub	eax, edx		; eax = s1[i] - s2[i]
+	cmp	eax, edx		; compare s1[i] et s2[i]
+	je	.equal			; égaux → 0
+	jl	.less			; s1[i] < s2[i] → -1
+	mov	eax, 1			; sinon s1[i] > s2[i] → 1
+	ret
+
+.less:
+	mov	eax, -1
+	ret
+
+.equal:
+	xor	eax, eax		; eax = 0
 	ret
