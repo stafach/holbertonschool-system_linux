@@ -17,10 +17,12 @@ asm_strncmp:
 	jae .equal			; si i >= n, return 0
 	movzx	eax, byte [rdi + rcx]	; eax = s1[i]
 	movzx	r8d, byte [rsi + rcx]	; edx = s2[i]
-	cmp	eax, r8d		; s1[i] == s2[i] ?
-	jne	.end			; non : on a trouvé une différence
 	test	eax, eax		; s1[i] == '\0' ? (donc s2[i] aussi)
 	je	.end			; oui : les deux chaînes sont finies
+	test	r8d, r8d		; s1[i] == '\0' ? (donc s2[i] aussi)
+	je	.end			; oui : les deux chaînes sont finies
+	cmp	eax, r8d		; s1[i] == s2[i] ?
+	jne	.end			; non : on a trouvé une différence
 	inc	rcx			; i++
 	jmp	.loop
 
