@@ -13,19 +13,19 @@ asm_strncmp:
 	xor	rcx, rcx		; compteur i = 0 (RCX, pas RAX)
 
 .loop:
+	cmp rcx, rdx		; i == n ?
+	jae .equal			; si i >= n, return 0
 	movzx	eax, byte [rdi + rcx]	; eax = s1[i]
 	movzx	r8d, byte [rsi + rcx]	; edx = s2[i]
-	cmp	eax, edx		; s1[i] == s2[i] ?
+	cmp	eax, r8d		; s1[i] == s2[i] ?
 	jne	.end			; non : on a trouvé une différence
 	test	eax, eax		; s1[i] == '\0' ? (donc s2[i] aussi)
 	je	.end			; oui : les deux chaînes sont finies
-	cmp rcx, rdx		; i == n ?
-	jae .equal			; si i >= n, return 0
 	inc	rcx			; i++
 	jmp	.loop
 
 .end:
-	cmp	eax, edx		; compare s1[i] et s2[i]
+	cmp	eax, r8d		; compare s1[i] et s2[i]
 	je	.equal			; égaux → 0
 	jl	.less			; s1[i] < s2[i] → -1
 	mov	eax, 1			; sinon s1[i] > s2[i] → 1
