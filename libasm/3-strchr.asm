@@ -5,7 +5,7 @@ global asm_strchr
 section .text
 
 ; char *asm_strchr(const char *s, int c);
-; 
+;
 ; Entrée : RDI = s, ESI = c
 ; Sortie : RAX = &s[i] ou NULL
 
