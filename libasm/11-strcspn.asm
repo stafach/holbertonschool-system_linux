@@ -23,7 +23,7 @@ asm_strcspn:
 	test	r8d, r8d		; fin de reject ?
 	je	.end			; oui : s[i] n'est pas dans reject → renvoie i
 	cmp	eax, r8d		; s[i] == reject[j] ?
-	jne	.next			; oui : s[i] est autorisé → caractère suivant
+	je	.end			; oui : s[i] est autorisé → caractère suivant
 	inc	rdx			; j++
 	jmp	.inner
 
