@@ -7,43 +7,30 @@ section .text
 ; size_t asm_strspn(const char *s, const char *accept);
 ;
 ; Entrée : RDI = s, RSI = accept
-; Sortie : Nombre de char de accept dans s
+; Sortie : RAX = nombre de caractères au début de s qui sont tous dans accept
 
 asm_strspn:
-	xor rcx, rcx	; i = 0
+	xor	rcx, rcx		; i = 0
 
 .outer:
-	xor	rdx, rdx					; j = 0
-	xor	r8, r8						; count = 0
-	inc r8							; count ++
-
-.first_loop:
 	movzx	eax, byte [rdi + rcx]	; eax = s[i]
-	movzx	edx, byte [rsi + rdx]	; edx = accept[j]
-	test	eax, eax				; s[i] == '\0' ?
-	je	.end						; oui : fin
-	test	edx, edx				; accept[j] == '\0'?
-	je	.first_char					; oui : vérification si premier char de s ou non
-	cmp	eax, edx					; s[i] == accept[j] ?
-	je	.second_loop				; oui : prochain char de s
-	inc	rdx							; j++
-	jmp	.first_loop
+	test	eax, eax		; s[i] == '\0' ?
+	je	.end			; oui : toute la chaîne est bonne → renvoie i
+	xor	rdx, rdx		; j = 0
 
-.first_char:
-	cmp	rcx, 0						; i == 0 ?
-	je	.null						; oui : fin
-	jmp	.second_loop				; sinon : prochain char de s1
+.inner:
+	movzx	r8d, byte [rsi + rdx]	; r8d = accept[j]   (R8D, pas EDX !)
+	test	r8d, r8d		; fin de accept ?
+	je	.end			; oui : s[i] n'est pas dans accept → renvoie i
+	cmp	eax, r8d		; s[i] == accept[j] ?
+	je	.next			; oui : s[i] est autorisé → caractère suivant
+	inc	rdx			; j++
+	jmp	.inner
 
-.second_loop:
-	inc	rcx							; i++
-	jmp .outer						; retour à j == 0
+.next:
+	inc	rcx			; i++
+	jmp	.outer
 
 .end:
-	mov	rax, r8
-	sub	rax, 1						; Return count - 1
+	mov	rax, rcx		; renvoie i
 	ret
-
-.null:
-	xor	eax, eax		; renvoie NULL
-	ret
-	
