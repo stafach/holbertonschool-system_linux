@@ -21,6 +21,7 @@ asm_strpbrk:
 	movzx	r8d, byte [rsi + rdx]	; r8d = accept[j]   (R8D, pas EDX !)
 	test	r8d, r8d		; fin de accept ?
 	je	.next			; oui : s[i] n'est pas dans accept → next
+	movzx	eax, byte [r9]	; eax = p[i]
 	cmp	eax, r8d		; s[i] == accept[j] ?
 	je	.end			; oui : return &s[i]
 	inc	rdx			; j++
