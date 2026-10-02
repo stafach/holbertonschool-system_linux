@@ -8,15 +8,16 @@ section .text
 ; size_t asm_puts(const char *str);
 ;
 ; Entrée : RDI = str
-; Sortie : Total number of bytes written
+; Sortie : RAX = nombre d'octets écrits
 
 asm_puts:
-	call asm_strlen ; RAX = len de str
-	push rdi		; envoi c sur la pile
-	mov eax, 1		; 1 = write pour syscall
-	mov edi, 1		; 1 = stdout
-	mov rsi, rsp	; met l'adress de c dans buf
-	mov rdx, rax	; n = RAX
-	syscall			; appel de write
-	pop rdi			; nettoie la pile
+	push	rbx		; RBX doit être préservé : on sauve sa valeur
+	mov	rbx, rdi	; met str à l'abri avant le call
+	call	asm_strlen	; RAX = longueur de str
+	mov	rdx, rax	; count = longueur  (AVANT d'écraser RAX)
+	mov	rsi, rbx	; buf = adresse de str
+	mov	edi, 1		; fd = stdout
+	mov	eax, 1		; syscall n°1 = write
+	syscall			; RAX = octets écrits
+	pop	rbx		; rend sa valeur à RBX
 	ret
