@@ -7,14 +7,13 @@ section .text
 ; char *asm_strpbrk(const char *s, const char *accept);
 ;
 ; Entrée : RDI = s, RSI = accept
-; Sortie : RAX = nombre de caractères au début de s qui sont tous dans accept
-
+; Sortie : RAX = adresse de la première occurrence entre s et accept ou NULL
 asm_strpbrk:
 	xor	rcx, rcx		; i = 0
 
 .outer:
 	lea	r9, [rdi + rcx]		; p = &s[i]
-	test	r9, r9		; s[i] == '\0' ?
+	cmp	byte [r9], 0		; s[i] == '\0' ?
 	je	.null			; oui : aucune occurrence trouvée
 	xor	rdx, rdx		; j = 0
 
