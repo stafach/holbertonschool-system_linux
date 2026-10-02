@@ -17,5 +17,4 @@ asm_putc:
 	mov edx, 1		; n = 1 octet
 	syscall			; appel de write
 	pop rdi			; nettoie la pile
-	mov rax, edx	; valeur de retour = nettoie
 	ret
