@@ -39,8 +39,8 @@ asm_strspn:
 	jmp .outer						; retour à j == 0
 
 .end:
-	mov	eax, r8
-	sub	eax, 1						; Return count - 1
+	mov	rax, r8
+	sub	rax, 1						; Return count - 1
 	ret
 
 .null:
