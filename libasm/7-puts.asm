@@ -16,7 +16,7 @@ asm_puts:
 	mov eax, 1		; 1 = write pour syscall
 	mov edi, 1		; 1 = stdout
 	mov rsi, rsp	; met l'adress de c dans buf
-	mov edx, rax	; n = RAX
+	mov rdx, rax	; n = RAX
 	syscall			; appel de write
 	pop rdi			; nettoie la pile
 	ret
