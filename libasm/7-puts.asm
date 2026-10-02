@@ -11,7 +11,7 @@ section .text
 ; Sortie : Total number of bytes written
 
 asm_puts:
-	call asm_strlen : RAX = len de str
+	call asm_strlen ; RAX = len de str
 	push rdi		; envoi c sur la pile
 	mov eax, 1		; 1 = write pour syscall
 	mov edi, 1		; 1 = stdout
