@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <signal.h>
 #include <string.h>
+#include <stdlib.h>
 
 int handle_signal(void);
 void (*current_handler_signal(void))(int);
