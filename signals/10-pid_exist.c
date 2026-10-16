@@ -1,4 +1,5 @@
 #include <sys/types.h>
+#include <signal.h>
 
 /**
  * pid_exist - Tests if a process exists, given its PID
