@@ -8,6 +8,7 @@
 void (*current_handler_sigaction(void))(int)
 {
 	struct sigaction act;
-	sigaction(SIGINT, NULL, &act);
+	if (sigaction(SIGINT, NULL, &act) == -1)
+		return (NULL);
 	return (act.sa_handler);
 }
