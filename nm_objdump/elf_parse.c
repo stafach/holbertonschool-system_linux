@@ -1,4 +1,4 @@
-#include "hnm.h"
+#include "Hnm.h"
 
 /**
  * check_elf - validate the ELF identification and header size

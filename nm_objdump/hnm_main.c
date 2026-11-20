@@ -3,7 +3,7 @@
 #include <string.h>
 #include <errno.h>
 #include <sys/stat.h>
-#include "hnm.h"
+#include "Hnm.h"
 
 /**
  * read_file - read a whole file into a newly allocated buffer

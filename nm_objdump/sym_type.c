@@ -1,6 +1,6 @@
 #include <ctype.h>
 #include <string.h>
-#include "hnm.h"
+#include "Hnm.h"
 
 /**
  * coff_type - letter given by GNU nm to some well known section names

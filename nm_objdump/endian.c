@@ -1,4 +1,4 @@
-#include "hnm.h"
+#include "Hnm.h"
 
 /**
  * rd16 - read a 16 bit value respecting the file endianness

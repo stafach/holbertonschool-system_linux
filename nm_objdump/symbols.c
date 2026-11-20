@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include "hnm.h"
+#include "Hnm.h"
 
 /**
  * find_symtab - find the SHT_SYMTAB section and its string table

@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "hnm.h"
+#include "Hnm.h"
 
 #define AR_MAGIC "!<arch>\n"
 #define AR_HDR_SIZE 60
