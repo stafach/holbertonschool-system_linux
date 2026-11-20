@@ -10,7 +10,7 @@ all: hnm
 hnm: $(HNM_OBJ)
 	$(CC) $(CFLAGS) $(HNM_OBJ) -o hnm
 
-%.o: %.c hnm.h
+%.o: %.c Hnm.h
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
