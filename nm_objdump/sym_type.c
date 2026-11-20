@@ -1,6 +1,6 @@
 #include <ctype.h>
 #include <string.h>
-#include "Hnm.h"
+#include "hnm.h"
 
 /**
  * coff_type - letter given by GNU nm to some well known section names
@@ -22,8 +22,7 @@ static char coff_type(const char *name)
 	for (i = 0; names[i]; i++)
 	{
 		len = strlen(names[i]);
-		if (!strncmp(name, names[i], len) &&
-		    memchr(".$0123456789", name[len], 13))
+		if (!strncmp(name, names[i], len))
 			return (types[i]);
 	}
 	return ('?');
